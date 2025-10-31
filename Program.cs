@@ -5,7 +5,7 @@ class Program
     static void Main()
     {
         Random random = new Random();
-        // генеруємо число з 6 цифр
+      
         string number = "";
         for (int i = 0; i < 6; i++)
         {
