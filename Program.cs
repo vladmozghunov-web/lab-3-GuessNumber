@@ -1,80 +1,73 @@
 ﻿using System;
 
-
-namespace MillionerGame
+class Program
 {
-    struct Question
+    static void Main()
     {
-        public string text;
-        public string a;
-        public string b;
-        public string c;
-        public string d;
-        public char correctAnswer;
-        public int points;
-    }
-
-    class Program
-    {
-        static void Main(string[] args)
+        Random random = new Random();
+        // генеруємо число з 6 цифр
+        string number = "";
+        for (int i = 0; i < 6; i++)
         {
-            Console.OutputEncoding = System.Text.Encoding.UTF8;
-            Console.InputEncoding = System.Text.Encoding.UTF8;
-            Question[] questions = new Question[3];
+            number += random.Next(0, 10);
+        }
 
-            questions[0].text = "Яка планета 4 від Сонця?";
-            questions[0].a = "а) Меркурій";
-            questions[0].b = "б) Марс";
-            questions[0].c = "в) Земля";
-            questions[0].d = "г) Уран";
-            questions[0].correctAnswer = 'б';
-            questions[0].points = 100;
+        int attempts = 3;
+        char[] guess = new char[number.Length];
 
-            questions[1].text = "Яка висота Евересту?";
-            questions[1].a = "а) 5 км";
-            questions[1].b = "б) 10 км";
-            questions[1].c = "в) 9 км";
-            questions[1].d = "г) 2 км";
-            questions[1].correctAnswer = 'в';
-            questions[1].points = 200;
+        for (int i = 0; i < guess.Length; i++)
+        {
+            guess[i] = '_';
+        }
 
-            questions[2].text = "Скільки буде 2+2?";
-            questions[2].a = "а) 3";
-            questions[2].b = "б) 4";
-            questions[2].c = "в) 5";
-            questions[2].d = "г) 6";
-            questions[2].correctAnswer = 'б';
-            questions[2].points = 300;
+        Console.WriteLine("Я загадав число з " + number.Length + " цифр.");
+        Console.WriteLine("У тебе " + attempts + " спроб.");
 
-            int totalPoints = 0;
+        while (attempts > 0)
+        {
+            Console.Write("Введи цифру: ");
+            string input = Console.ReadLine();
 
-            Console.WriteLine("=== Гра 'Як стати мільйонером' ===\n");
-
-            for (int i = 0; i < questions.Length; i++)
+            if (input.Length != 1 || !char.IsDigit(input[0]))
             {
-                Console.WriteLine($"Питання {i + 1}: {questions[i].text}");
-                Console.WriteLine(questions[i].a);
-                Console.WriteLine(questions[i].b);
-                Console.WriteLine(questions[i].c);
-                Console.WriteLine(questions[i].d);
-                Console.Write("\nОберіть правильну відповідь (а, б, в, г): ");
-                char answer = Convert.ToChar(Console.ReadLine());
-
-                if (answer == questions[i].correctAnswer)
-                {
-                    totalPoints += questions[i].points;
-                    Console.WriteLine("Правильно! Ви заробили {questions[i].points} очок.");
-                }
-                else
-                {
-                    Console.WriteLine("Неправильно, ви програли.");
-                    break;
-                }
-                Console.WriteLine();
+                Console.WriteLine("Введи одну цифру!");
+                continue;
             }
 
-            Console.WriteLine($"\nГру закінчено. Ви набрали {totalPoints} очок.");
-            Console.ReadKey();
+            char digit = input[0];
+            bool found = false;
+
+            for (int i = 0; i < number.Length; i++)
+            {
+                if (number[i] == digit)
+                {
+                    guess[i] = digit;
+                    found = true;
+                }
+            }
+
+            if (!found)
+            {
+                attempts--;
+                Console.WriteLine("Такої цифри нема! Залишилось спроб: " + attempts);
+            }
+            else
+            {
+                Console.WriteLine("Є така цифра!");
+            }
+
+            Console.WriteLine("Поточний стан: " + new string(guess));
+
+            if (new string(guess) == number)
+            {
+                Console.WriteLine("Ти вгадав число! ");
+                break;
+            }
+        }
+
+        if (attempts == 0)
+        {
+            Console.WriteLine("Ти програв! Число було: " + number);
         }
     }
 }
